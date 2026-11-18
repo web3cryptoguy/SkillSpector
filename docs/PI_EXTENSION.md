@@ -5,7 +5,9 @@ SkillSpector can be installed into Pi as a local package. The extension register
 ## Requirements
 
 - Pi installed.
-- Python `>=3.12,<3.15`.
+- Python in the [package's supported range](../pyproject.toml); Python 3.12 or 3.13
+  is recommended for prebuilt YARA wheels. See the
+  [installation notes](../README.md#python-installation-notes).
 - `uv` recommended.
 - This repo checked out locally.
 
@@ -13,7 +15,7 @@ SkillSpector can be installed into Pi as a local package. The extension register
 
 ```bash
 cd /path/to/SkillSpector
-uv sync
+uv sync --python 3.13
 pi install /path/to/SkillSpector
 ```
 
@@ -61,9 +63,10 @@ disabled: put self-contained rule files in the selected directory.
 Static scan is default. To use semantic LLM analysis, configure provider credentials in your shell before launching Pi, then call the tool with `noLlm=false` and a provider.
 
 Static scans have a 120-second process limit. Explicit LLM scans have a
-630-second limit, allowing the CLI's default 600-second workflow budget plus
-startup and report writing. This tool limit stays fixed even if
-`SKILLSPECTOR_MAX_WORKFLOW_SECONDS` is configured above 600.
+630-second limit, independent of the CLI's default 1080-second workflow budget.
+This tool can therefore stop a scan before its workflow deadline. Changing
+`SKILLSPECTOR_MAX_WORKFLOW_SECONDS` does not extend this tool limit; use the CLI
+directly for longer scans.
 
 Example:
 
